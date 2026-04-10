@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import { useAdminKey } from "@/hooks/useAdminKey";
+import { useConfig } from "@/hooks/useConfig";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { ApiKeySetup } from "@/components/dashboard/ApiKeySetup";
 import { Header } from "@/components/dashboard/Header";
@@ -12,15 +13,14 @@ import { UserTable } from "@/components/dashboard/UserTable";
 import { DailySpendChart, ModelBreakdownChart, SpendPieChart } from "@/components/dashboard/UsageChart";
 import { Button } from "@/components/ui/button";
 
-const MONTHLY_LIMIT = 2000; // Default; can be made configurable
-
 export default function DashboardPage() {
   const { adminKey, setAdminKey, isLoaded } = useAdminKey();
+  const { config, setConfig, isLoaded: configLoaded } = useConfig();
   const [showSettings, setShowSettings] = useState(false);
   const { usage, members, loading, error, refresh, dateRange, setDateRange, lastRefresh } =
     useDashboardData(adminKey);
 
-  if (!isLoaded) {
+  if (!isLoaded || !configLoaded) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Loader2 className="h-8 w-8 text-indigo-600 animate-spin" />
@@ -32,8 +32,11 @@ export default function DashboardPage() {
     return (
       <ApiKeySetup
         currentKey={adminKey}
-        onSave={(key) => {
+        currentMonthlyLimit={config.monthlyLimit}
+        onCancel={adminKey ? () => setShowSettings(false) : undefined}
+        onSave={(key, monthlyLimit) => {
           setAdminKey(key);
+          setConfig({ monthlyLimit });
           setShowSettings(false);
         }}
       />
@@ -98,7 +101,7 @@ export default function DashboardPage() {
               <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
                 Usage &amp; Spend Limits
               </h2>
-              <SpendOverview usage={usage} spendLimit={MONTHLY_LIMIT} dateLabel={dateLabel} />
+              <SpendOverview usage={usage} spendLimit={config.monthlyLimit} dateLabel={dateLabel} />
             </section>
 
             {/* Section: Insights */}
@@ -133,7 +136,7 @@ export default function DashboardPage() {
               <UserTable
                 members={members.members}
                 apiKeyUsage={usage.byApiKey}
-                totalBudget={MONTHLY_LIMIT}
+                totalBudget={config.monthlyLimit}
               />
             </section>
           </>
