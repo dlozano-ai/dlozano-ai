@@ -78,10 +78,22 @@ export function getInitials(name: string): string {
     .slice(0, 2);
 }
 
-const COLORS = [
-  "#6366f1", "#8b5cf6", "#ec4899", "#f43f5e", "#f97316",
-  "#eab308", "#22c55e", "#14b8a6", "#3b82f6", "#06b6d4",
-];
+// KindWorks.AI chart palette — ordered by brand preference
+// Green leads (data foundation), then yellow (warmth), coral (bold),
+// purple (inspiration), mint (soft data), then darker/lighter variants.
+export const KW_CHART_COLORS = [
+  "#2E6661", // green (data)
+  "#FFB500", // yellow (warmth)
+  "#FF474A", // coral (bold)
+  "#9C338C", // purple (inspiration)
+  "#8FE0BF", // mint (soft data)
+  "#1B4239", // dark green
+  "#4DAE97", // dark mint
+  "#FFD166", // light yellow
+  "#FF8484", // light coral
+  "#6F0E60", // dark purple
+] as const;
+
 export function getUserColor(index: number): string {
-  return COLORS[index % COLORS.length];
+  return KW_CHART_COLORS[index % KW_CHART_COLORS.length];
 }

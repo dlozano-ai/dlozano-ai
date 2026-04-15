@@ -2,6 +2,7 @@
 
 import { RefreshCw, Settings, LogOut, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { KWLogo } from "@/components/ui/KWLogo";
 import type { DateRange } from "@/hooks/useDashboardData";
 
 interface HeaderProps {
@@ -29,31 +30,31 @@ export function Header({
   dateRange,
   onDateRangeChange,
 }: HeaderProps) {
-  const label = DATE_OPTIONS.find((o) => o.value === dateRange)?.label ?? "Month to Date";
-
   return (
-    <header className="sticky top-0 z-10 border-b border-gray-200 bg-white/90 backdrop-blur-sm">
+    <header className="sticky top-0 z-20 border-b border-[color:var(--kw-border)] bg-white/85 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-              <span className="text-white text-sm font-bold">C</span>
-            </div>
-            <div>
-              <h1 className="text-sm font-bold text-gray-900">Org Usage Dashboard</h1>
-              <p className="text-xs text-gray-400">Claude · Anthropic</p>
+        <div className="flex h-20 items-center justify-between gap-4">
+          {/* Brand */}
+          <div className="flex items-center gap-3 min-w-0">
+            <KWLogo variant="mark" className="h-11 w-11 text-base shrink-0" />
+            <div className="min-w-0">
+              <div className="flex items-baseline gap-1">
+                <KWLogo className="text-[17px]" />
+              </div>
+              <p className="text-xs text-[color:var(--kw-text-muted)] font-medium">
+                Organization Usage
+              </p>
             </div>
           </div>
 
           {/* Controls */}
           <div className="flex items-center gap-2">
-            {/* Date range selector */}
+            {/* Date range selector — pill-shaped per brand */}
             <div className="relative">
               <select
                 value={dateRange}
                 onChange={(e) => onDateRangeChange(e.target.value as DateRange)}
-                className="appearance-none pl-3 pr-8 py-2 text-sm bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                className="appearance-none pl-5 pr-10 h-11 text-sm font-medium bg-white border border-[color:var(--kw-border-strong)] rounded-full text-[color:var(--kw-green-dark)] hover:border-[color:var(--kw-green)] focus:outline-none focus:ring-2 focus:ring-[color:var(--kw-green)]/20 cursor-pointer transition-colors"
               >
                 {DATE_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -61,12 +62,16 @@ export function Header({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--kw-green)] pointer-events-none" />
             </div>
 
             {lastRefresh && (
-              <span className="hidden sm:block text-xs text-gray-400">
-                Updated {lastRefresh.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              <span className="hidden md:inline-flex items-center gap-1.5 text-xs text-[color:var(--kw-text-muted)] px-2">
+                <span className="kw-dot h-1.5 w-1.5 text-[color:var(--kw-mint-dark)]" />
+                {lastRefresh.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </span>
             )}
 
@@ -75,11 +80,11 @@ export function Header({
               <span className="hidden sm:inline">Refresh</span>
             </Button>
 
-            <Button variant="ghost" size="sm" onClick={onSettings}>
+            <Button variant="ghost" size="sm" onClick={onSettings} aria-label="Settings">
               <Settings className="h-4 w-4" />
             </Button>
 
-            <Button variant="ghost" size="sm" onClick={onLogout}>
+            <Button variant="ghost" size="sm" onClick={onLogout} aria-label="Sign out">
               <LogOut className="h-4 w-4" />
             </Button>
           </div>

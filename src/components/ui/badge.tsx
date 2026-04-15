@@ -1,22 +1,40 @@
 import { cn } from "@/lib/utils";
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "success" | "warning" | "danger" | "muted";
+  /**
+   * KindWorks.AI semantic colors:
+   * - green = data / proof points (default)
+   * - mint  = cited research / soft data
+   * - purple = inspiration / useful content
+   * - yellow = warmth / celebrations
+   * - coral = bold statements / warnings
+   * - muted = neutral / low-emphasis
+   */
+  variant?: "green" | "mint" | "purple" | "yellow" | "coral" | "muted" | "default";
 }
 
 const variantClasses: Record<NonNullable<BadgeProps["variant"]>, string> = {
-  default: "bg-indigo-50 text-indigo-700 ring-indigo-600/20",
-  success: "bg-green-50 text-green-700 ring-green-600/20",
-  warning: "bg-amber-50 text-amber-700 ring-amber-600/20",
-  danger: "bg-red-50 text-red-700 ring-red-600/20",
-  muted: "bg-gray-100 text-gray-600 ring-gray-500/20",
+  default:
+    "bg-[color:var(--kw-green)]/10 text-[color:var(--kw-green-dark)] ring-[color:var(--kw-green)]/20",
+  green:
+    "bg-[color:var(--kw-green)]/10 text-[color:var(--kw-green-dark)] ring-[color:var(--kw-green)]/20",
+  mint:
+    "bg-[color:var(--kw-mint)]/30 text-[color:var(--kw-green-dark)] ring-[color:var(--kw-mint-dark)]/40",
+  purple:
+    "bg-[color:var(--kw-purple)]/10 text-[color:var(--kw-purple-dark)] ring-[color:var(--kw-purple)]/25",
+  yellow:
+    "bg-[color:var(--kw-yellow-light)]/50 text-[color:var(--kw-green-dark)] ring-[color:var(--kw-yellow)]/40",
+  coral:
+    "bg-[color:var(--kw-coral)]/10 text-[color:var(--kw-coral)] ring-[color:var(--kw-coral)]/25",
+  muted:
+    "bg-[color:var(--kw-black)]/5 text-[color:var(--kw-text-muted)] ring-[color:var(--kw-black)]/10",
 };
 
-export function Badge({ className, variant = "default", ...props }: BadgeProps) {
+export function Badge({ className, variant = "green", ...props }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset",
+        "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset",
         variantClasses[variant],
         className
       )}

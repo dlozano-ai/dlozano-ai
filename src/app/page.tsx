@@ -9,10 +9,14 @@ import { Header } from "@/components/dashboard/Header";
 import { SpendOverview } from "@/components/dashboard/SpendOverview";
 import { InsightCards } from "@/components/dashboard/InsightCards";
 import { UserTable } from "@/components/dashboard/UserTable";
-import { DailySpendChart, ModelBreakdownChart, SpendPieChart } from "@/components/dashboard/UsageChart";
+import {
+  DailySpendChart,
+  ModelBreakdownChart,
+  SpendPieChart,
+} from "@/components/dashboard/UsageChart";
 import { Button } from "@/components/ui/button";
 
-const MONTHLY_LIMIT = 2000; // Default; can be made configurable
+const MONTHLY_LIMIT = 2000;
 
 export default function DashboardPage() {
   const { adminKey, setAdminKey, isLoaded } = useAdminKey();
@@ -22,8 +26,8 @@ export default function DashboardPage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-indigo-600 animate-spin" />
+      <div className="min-h-screen bg-[color:var(--kw-bg)] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 text-[color:var(--kw-green)] animate-spin" />
       </div>
     );
   }
@@ -43,17 +47,21 @@ export default function DashboardPage() {
   const dateLabel = (() => {
     const now = new Date();
     if (dateRange === "mtd") {
-      return `Month to date · Resets ${new Date(now.getFullYear(), now.getMonth() + 1, 1).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`;
+      return `Month to date · Resets ${new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        1
+      ).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`;
     }
     if (dateRange === "last7") return "Last 7 days";
     return "Last 30 days";
   })();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[color:var(--kw-bg)]">
       <Header
         onRefresh={refresh}
-        onLogout={() => { setAdminKey(""); }}
+        onLogout={() => setAdminKey("")}
         onSettings={() => setShowSettings(true)}
         loading={loading}
         lastRefresh={lastRefresh}
@@ -61,20 +69,28 @@ export default function DashboardPage() {
         onDateRangeChange={setDateRange}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
         {/* Error state */}
         {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+          <div className="rounded-[28px] border border-[color:var(--kw-coral)]/20 bg-[color:var(--kw-coral)]/5 p-6 flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-[color:var(--kw-coral)] shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-red-800">Failed to load data</p>
-              <p className="text-sm text-red-600 mt-0.5 break-all">{error}</p>
-              <div className="mt-3 flex gap-2">
+              <p className="font-heading font-bold text-[color:var(--kw-coral)]">
+                Couldn&apos;t load your data
+              </p>
+              <p className="text-sm text-[color:var(--kw-text-muted)] mt-1 break-all">
+                {error}
+              </p>
+              <div className="mt-4 flex gap-2">
                 <Button variant="secondary" size="sm" onClick={refresh}>
                   <RefreshCw className="h-3.5 w-3.5" />
                   Retry
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => setShowSettings(true)}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setShowSettings(true)}
+                >
                   Change API Key
                 </Button>
               </div>
@@ -84,36 +100,41 @@ export default function DashboardPage() {
 
         {/* Loading state */}
         {loading && !usage && (
-          <div className="rounded-xl border border-gray-200 bg-white p-12 flex flex-col items-center gap-3">
-            <Loader2 className="h-8 w-8 text-indigo-600 animate-spin" />
-            <p className="text-gray-500">Loading organization usage data...</p>
+          <div className="rounded-[28px] border border-[color:var(--kw-border)] bg-white p-16 flex flex-col items-center gap-4">
+            <Loader2 className="h-10 w-10 text-[color:var(--kw-green)] animate-spin" />
+            <p className="text-[color:var(--kw-text-muted)] font-medium">
+              Loading organization usage data…
+            </p>
           </div>
         )}
 
         {/* Dashboard content */}
         {usage && members && (
           <>
-            {/* Section: Spend overview */}
-            <section>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
-                Usage &amp; Spend Limits
-              </h2>
-              <SpendOverview usage={usage} spendLimit={MONTHLY_LIMIT} dateLabel={dateLabel} />
-            </section>
+            {/* Hero spend card (already has its own section header) */}
+            <SpendOverview
+              usage={usage}
+              spendLimit={MONTHLY_LIMIT}
+              dateLabel={dateLabel}
+            />
 
             {/* Section: Insights */}
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
-                Key Insights
-              </h2>
+              <SectionHeader
+                eyebrow="Key Insights"
+                title="What's worth knowing"
+                serifEmphasis="knowing"
+              />
               <InsightCards usage={usage} members={members.members} />
             </section>
 
             {/* Section: Charts */}
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
-                Usage Trends
-              </h2>
+              <SectionHeader
+                eyebrow="Usage Trends"
+                title="How spend is flowing"
+                serifEmphasis="flowing"
+              />
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div className="lg:col-span-2">
                   <DailySpendChart usage={usage} />
@@ -127,9 +148,11 @@ export default function DashboardPage() {
 
             {/* Section: User table */}
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
-                Spend by Member
-              </h2>
+              <SectionHeader
+                eyebrow="By Member"
+                title="Who's using what"
+                serifEmphasis="who's"
+              />
               <UserTable
                 members={members.members}
                 apiKeyUsage={usage.byApiKey}
@@ -139,16 +162,62 @@ export default function DashboardPage() {
           </>
         )}
 
-        {/* Empty state - has key but no data */}
+        {/* Empty state */}
         {!loading && !error && usage && usage.summary.recordCount === 0 && (
-          <div className="rounded-xl border border-gray-200 bg-white p-12 text-center">
-            <p className="text-gray-500 text-lg font-medium">No usage data found</p>
-            <p className="text-gray-400 text-sm mt-2">
+          <div className="rounded-[28px] border border-[color:var(--kw-border)] bg-white p-16 text-center">
+            <p className="font-heading font-bold text-xl text-[color:var(--kw-green-dark)]">
+              No usage yet
+            </p>
+            <p className="text-[color:var(--kw-text-muted)] text-sm mt-2">
               No API calls were made in the selected period.
             </p>
           </div>
         )}
+
+        <footer className="pt-6 pb-2 text-center text-xs text-[color:var(--kw-text-faint)]">
+          Being Kind Works.
+        </footer>
       </main>
+    </div>
+  );
+}
+
+/**
+ * Section header with KindWorks eyebrow + Jeko Bold + Tiempos serif emphasis on one word.
+ * Matches the brand pattern described in the design guide.
+ */
+function SectionHeader({
+  eyebrow,
+  title,
+  serifEmphasis,
+}: {
+  eyebrow: string;
+  title: string;
+  serifEmphasis?: string;
+}) {
+  const parts = serifEmphasis
+    ? title.split(new RegExp(`(${serifEmphasis})`, "i"))
+    : [title];
+  return (
+    <div className="mb-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--kw-green)] mb-1">
+        {eyebrow}
+      </p>
+      <h2 className="font-heading font-bold text-2xl sm:text-[26px] tracking-tight text-[color:var(--kw-green-dark)]">
+        {parts.map((p, i) =>
+          serifEmphasis && p.toLowerCase() === serifEmphasis.toLowerCase() ? (
+            <em
+              key={i}
+              className="font-serif font-normal italic not-italic-fallback"
+              style={{ fontStyle: "italic", color: "var(--kw-green)" }}
+            >
+              {p}
+            </em>
+          ) : (
+            <span key={i}>{p}</span>
+          )
+        )}
+      </h2>
     </div>
   );
 }
