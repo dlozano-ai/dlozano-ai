@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- KindWorks.AI app icon: green pill background with "K" + yellow dot (".AI") -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2E6661"/>
+      <stop offset="100%" stop-color="#1B4239"/>
+    </linearGradient>
+    <!-- Subtle grid overlay, brand signature -->
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M 64 0 L 0 0 0 64" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Rounded-corner app tile (macOS 22.37% corner radius ≈ 229px on 1024) -->
+  <rect x="0" y="0" width="1024" height="1024" rx="229" ry="229" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1024" height="1024" rx="229" ry="229" fill="url(#grid)"/>
+
+  <!-- Decorative dot cluster -->
+  <circle cx="820" cy="200" r="22" fill="#FFB500" opacity="0.9"/>
+  <circle cx="880" cy="270" r="12" fill="#FFD166" opacity="0.8"/>
+  <circle cx="740" cy="250" r="8" fill="#FFB500" opacity="0.7"/>
+  <circle cx="180" cy="820" r="14" fill="#8FE0BF" opacity="0.8"/>
+  <circle cx="250" cy="870" r="8" fill="#8FE0BF" opacity="0.7"/>
+
+  <!-- The "K" letterform, rounded, friendly, Jeko-inspired -->
+  <g transform="translate(320 260)">
+    <!-- Vertical stroke -->
+    <rect x="0" y="0" width="90" height="500" rx="45" fill="#FFFFFF"/>
+    <!-- Upper diagonal stroke -->
+    <rect x="0" y="0" width="90" height="300" rx="45" fill="#FFFFFF"
+          transform="translate(90 150) rotate(-45)"/>
+    <!-- Lower diagonal stroke (accent in yellow) -->
+    <rect x="0" y="0" width="90" height="300" rx="45" fill="#FFB500"
+          transform="translate(90 350) rotate(45)"/>
+  </g>
+
+  <!-- ".AI" superscript dot: coral accent -->
+  <circle cx="770" cy="520" r="34" fill="#FF474A"/>
+</svg>

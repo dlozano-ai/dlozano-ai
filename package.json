@@ -1,12 +1,27 @@
 {
-  "name": "dlozano-ai",
+  "name": "kindworks-usage-dashboard",
+  "productName": "KindWorks Usage",
   "version": "0.1.0",
+  "description": "KindWorks.AI organization usage dashboard for Claude",
+  "author": {
+    "name": "KindWorks.AI",
+    "email": "hello@kindworks.ai"
+  },
+  "main": "electron/main.js",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prepare:electron": "node scripts/prepare-electron.js",
+    "build:icon": "node scripts/build-icon.js",
+    "build:electron": "next build && npm run prepare:electron",
+    "electron:dev": "concurrently -k -n next,electron -c blue,green \"next dev\" \"wait-on http://127.0.0.1:3000 && NEXT_DEV_URL=http://127.0.0.1:3000 electron .\"",
+    "electron:preview": "npm run build:electron && electron .",
+    "pack:mac": "npm run build:electron && electron-builder --mac --universal",
+    "pack:mac-arm64": "npm run build:electron && electron-builder --mac --arm64",
+    "pack:mac-x64": "npm run build:electron && electron-builder --mac --x64"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -30,9 +45,73 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "electron": "^41.2.0",
+    "electron-builder": "^26.8.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wait-on": "^9.0.5"
+  },
+  "build": {
+    "appId": "ai.kindworks.usage-dashboard",
+    "productName": "KindWorks Usage",
+    "copyright": "Copyright © 2026 KindWorks.AI",
+    "directories": {
+      "output": "dist-electron",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**/*",
+      "!**/*.ts",
+      "!**/*.map"
+    ],
+    "extraResources": [
+      {
+        "from": "app-dist",
+        "to": "app-dist",
+        "filter": ["**/*"]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.business",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["universal"]
+        },
+        {
+          "target": "zip",
+          "arch": ["universal"]
+        }
+      ],
+      "icon": "build/icon.icns",
+      "darkModeSupport": false,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "identity": null
+    },
+    "dmg": {
+      "title": "KindWorks Usage",
+      "backgroundColor": "#2E6661",
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 140,
+          "y": 190,
+          "type": "file"
+        },
+        {
+          "x": 400,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
   }
 }
