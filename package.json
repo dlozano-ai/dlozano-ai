@@ -19,9 +19,10 @@
     "build:electron": "next build && npm run prepare:electron",
     "electron:dev": "concurrently -k -n next,electron -c blue,green \"next dev\" \"wait-on http://127.0.0.1:3000 && NEXT_DEV_URL=http://127.0.0.1:3000 electron .\"",
     "electron:preview": "npm run build:electron && electron .",
-    "pack:mac": "npm run build:electron && electron-builder --mac --universal",
+    "pack:mac": "npm run build:electron && electron-builder --mac --arm64",
     "pack:mac-arm64": "npm run build:electron && electron-builder --mac --arm64",
-    "pack:mac-x64": "npm run build:electron && electron-builder --mac --x64"
+    "pack:mac-x64": "npm run build:electron && electron-builder --mac --x64",
+    "pack:mac-universal": "npm run build:electron && electron-builder --mac --universal"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -77,14 +78,8 @@
     "mac": {
       "category": "public.app-category.business",
       "target": [
-        {
-          "target": "dmg",
-          "arch": ["universal"]
-        },
-        {
-          "target": "zip",
-          "arch": ["universal"]
-        }
+        "dmg",
+        "zip"
       ],
       "icon": "build/icon.icns",
       "darkModeSupport": false,

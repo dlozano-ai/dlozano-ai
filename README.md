@@ -23,7 +23,7 @@ Grab the latest `.dmg` from the [Releases page](https://github.com/dlozano-ai/dl
 
 ### Install
 
-1. Open `KindWorks Usage-<version>-universal.dmg`
+1. Open `KindWorks Usage-<version>-arm64.dmg` (Apple Silicon) or the matching `-x64` build for Intel Macs
 2. Drag **KindWorks Usage** into the Applications folder
 3. Launch it from Applications or Spotlight
 
@@ -70,18 +70,19 @@ npm install
 # regenerate the app icon from build/icon.svg
 npm run build:icon
 
-# build the universal .dmg (arm64 + x64)
+# build the .dmg for your Mac's architecture (defaults to Apple Silicon / arm64)
 npm run pack:mac
 ```
 
 Output lands in `dist-electron/`:
-- `KindWorks Usage-0.1.0-universal.dmg` — installer
-- `KindWorks Usage-0.1.0-universal-mac.zip` — zipped .app bundle
+- `KindWorks Usage-0.1.0-arm64.dmg` — installer
+- `KindWorks Usage-0.1.0-arm64-mac.zip` — zipped .app bundle
 
-### Faster, single-arch builds
+### Other architectures
 
-- `npm run pack:mac-arm64` — Apple Silicon only (M1/M2/M3/M4 Macs)
-- `npm run pack:mac-x64` — Intel Macs only
+- `npm run pack:mac-arm64` — Apple Silicon (M1/M2/M3/M4) — same as default
+- `npm run pack:mac-x64` — Intel Macs
+- `npm run pack:mac-universal` — both in one `.dmg` (larger file, slower build; avoid unless needed)
 
 ### Iterating with Electron live
 
